@@ -1,7 +1,7 @@
 {
     "name": "zhf.drag",
     "version": "1.0.0",
-    "description": "zhf.drag",
+    "description": "no description",
     "main": "dist/index.min.js",
     "scripts": {
         "codeLint": "eslint --ext .js,.vue,.html ./",
@@ -34,5 +34,8 @@
         "gulp-rename": "^1.2.2",
         "gulp-uglify": "^3.0.0",
         "jest": "^22.1.1"
+    },
+    "dependencies": {
+        "zhf.extend": "^2.0.1"
     }
 }

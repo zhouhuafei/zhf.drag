@@ -1,17 +1,14 @@
-(function (name, factory) {
-    if (typeof exports === 'object' && typeof module !== 'undefined') { // nodejs - commonjs canon
-        module.exports = factory();
-    } else if (typeof define === 'function' && define.amd) { // requirejs - amd canon
-        define(factory);
-    } else { // window - browser canon
-        this[name] = factory();
-    }
-})('Drag', function () {
-    class Drag {
-        constructor(opts) {
-            this.opts = opts || {};
-        }
+const extend = require('zhf.extend');
+console.log(extend);
+
+class Super {
+    constructor(opts) {
+        this.opts = extend({}, opts);
+        this.init();
     }
 
-    return Drag;
-});
+    init() {
+    }
+}
+
+module.exports = Super;

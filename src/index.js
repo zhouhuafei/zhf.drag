@@ -1,5 +1,4 @@
 const extend = require('zhf.extend');
-console.log(extend);
 
 class Super {
     constructor(opts) {

@@ -6,6 +6,7 @@ const browserify = require('gulp-browserify');
 
 gulp.task('watch', function () {
     gulp.watch(['src/**/*.**'], ['es5', 'jsmin']);
+    gulp.watch(['demo/**/*.dev.js'], ['demo']);
 });
 
 gulp.task('es5', function () {
@@ -17,13 +18,10 @@ gulp.task('jsmin', function () {
 });
 
 gulp.task('demo', function () {
-    gulp.src('demo/**/*.dev.js')
-        .pipe(browserify({
-            insertGlobals: true,
-            debug: !gulp.env.production
-        }))
+    gulp.src('demo/index.js')
+        .pipe(browserify())
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('demo'));
 });
 
-gulp.task('default', ['es5', 'jsmin', 'watch']);
+gulp.task('default', ['es5', 'jsmin', 'demo', 'watch']);

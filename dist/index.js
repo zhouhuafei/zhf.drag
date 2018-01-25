@@ -10,7 +10,12 @@ var Super = function () {
     function Super(opts) {
         _classCallCheck(this, Super);
 
-        this.opts = extend({}, opts);
+        this.opts = extend({
+            wrap: '', // 哪个容器需要拖拽功能
+            callback: {},
+            config: {},
+            data: {}
+        }, opts);
         this.init();
     }
 

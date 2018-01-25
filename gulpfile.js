@@ -5,8 +5,8 @@ const rename = require('gulp-rename');
 const browserify = require('gulp-browserify');
 
 gulp.task('watch', function () {
-    gulp.watch(['src/**/*.**'], ['es5', 'jsmin']);
-    gulp.watch(['demo/**/*.dev.js'], ['demo']);
+    gulp.watch(['src/**/*.**'], ['es5', 'jsmin', 'demo']);
+    gulp.watch(['demo/index.js'], ['demo']);
 });
 
 gulp.task('es5', function () {

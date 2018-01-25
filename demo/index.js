@@ -1,6 +1,6 @@
 const Drag = require('../dist/index.min');
 new Drag({
-    wrap: '.item',
+    el: '.item',
     callback: {},
     config: {},
     data: {},

@@ -5,13 +5,14 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var extend = require('zhf.extend');
+var getDomArray = require('zhf.get-dom-array');
 
 var Super = function () {
     function Super(opts) {
         _classCallCheck(this, Super);
 
         this.opts = extend({
-            wrap: '', // 哪个容器需要拖拽功能
+            el: '', // 哪个容器需要拖拽功能
             callback: {},
             config: {},
             data: {}
@@ -21,7 +22,9 @@ var Super = function () {
 
     _createClass(Super, [{
         key: 'init',
-        value: function init() {}
+        value: function init() {
+            this.elDom = getDomArray(this.opts.el);
+        }
     }]);
 
     return Super;

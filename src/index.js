@@ -1,9 +1,10 @@
 const extend = require('zhf.extend');
+const getDomArray = require('zhf.get-dom-array');
 
 class Super {
     constructor(opts) {
         this.opts = extend({
-            wrap: '', // 哪个容器需要拖拽功能
+            el: '', // 哪个容器需要拖拽功能
             callback: {},
             config: {},
             data: {},
@@ -12,6 +13,7 @@ class Super {
     }
 
     init() {
+        this.elDom = getDomArray(this.opts.el);
     }
 }
 

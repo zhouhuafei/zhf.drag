@@ -13,7 +13,11 @@ var Super = function () {
 
         this.opts = extend({
             el: '', // 哪个容器需要拖拽功能
-            callback: {},
+            callback: {
+                mouseDown: function mouseDown() {},
+                mouseMove: function mouseMove() {},
+                mouseUp: function mouseUp() {}
+            },
             config: {},
             data: {}
         }, opts);
@@ -23,7 +27,42 @@ var Super = function () {
     _createClass(Super, [{
         key: 'init',
         value: function init() {
+            var _this = this;
+
             this.elDom = getDomArray(this.opts.el);
+            this.elDom.forEach(function (v) {
+                _this.events(v);
+            });
+        }
+    }, {
+        key: 'events',
+        value: function events(v) {
+            v.addEventListener('mousedown', this.mouseDown);
+            v.addEventListener('mousemove', this.mouseMove);
+            v.addEventListener('mouseup', this.mouseUp);
+        }
+    }, {
+        key: 'mouseDown',
+        value: function mouseDown(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            this.startX = 0;
+            this.startY = 0;
+        }
+    }, {
+        key: 'mouseMove',
+        value: function mouseMove(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+        }
+    }, {
+        key: 'mouseUp',
+        value: function mouseUp(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            this.removeEventListener('mousedown', this.mouseUp);
+            this.removeEventListener('mousemove', this.mouseUp);
+            this.removeEventListener('mouseup', this.mouseUp);
         }
     }]);
 

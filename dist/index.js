@@ -30,8 +30,18 @@ var Super = function () {
             var _this = this;
 
             this.elDom = getDomArray(this.opts.el);
-            this.elDom.forEach(function (v) {
+            this.elDom.forEach(function (v, i) {
+                var parentDom = v.parentNode;
+                parentDom.style.width = parentDom.offsetWidth;
+                parentDom.style.height = parentDom.offsetHeight;
+                if (getComputedStyle(parentDom).position === 'static') {
+                    if (parentDom.style.position === '' || parentDom.style.position === 'static') {
+                        parentDom.style.position = 'relative';
+                    }
+                }
+
                 _this.events(v);
+                _this['parentDom' + i] = parentDom;
             });
         }
     }, {

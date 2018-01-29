@@ -21,8 +21,18 @@ class Super {
 
     init() {
         this.elDom = getDomArray(this.opts.el);
-        this.elDom.forEach((v) => {
+        this.elDom.forEach((v, i) => {
+            const parentDom = v.parentNode;
+            parentDom.style.width = parentDom.offsetWidth;
+            parentDom.style.height = parentDom.offsetHeight;
+            if (getComputedStyle(parentDom).position === 'static') {
+                if (parentDom.style.position === '' || parentDom.style.position === 'static') {
+                    parentDom.style.position = 'relative';
+                }
+            }
+
             this.events(v);
+            this[`parentDom${i}`] = parentDom;
         });
     }
 

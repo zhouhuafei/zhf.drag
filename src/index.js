@@ -1,10 +1,11 @@
 const extend = require('zhf.extend');
 const getDomArray = require('zhf.get-dom-array');
+const domAddPosition = require('zhf.dom-add-position');
 
 class Super {
     constructor(opts) {
         this.opts = extend({
-            el: '', // 哪个容器需要拖拽功能
+            wrap: '', // 这个容器里的直属子级可以被拖拽
             callback: {
                 mouseDown: function () {
                 },
@@ -20,20 +21,27 @@ class Super {
     }
 
     init() {
-        this.elDom = getDomArray(this.opts.el);
-        this.elDom.forEach((v, i) => {
-            const parentDom = v.parentNode;
-            parentDom.style.width = parentDom.offsetWidth;
-            parentDom.style.height = parentDom.offsetHeight;
-            if (getComputedStyle(parentDom).position === 'static') {
-                if (parentDom.style.position === '' || parentDom.style.position === 'static') {
-                    parentDom.style.position = 'relative';
-                }
-            }
-
-            this.events(v);
-            this[`parentDom${i}`] = parentDom;
+        const wrapDom = getDomArray(this.opts.wrap)[0];
+        if (!wrapDom) {
+            return;
+        }
+        wrapDom.style.width = wrapDom.offsetWidth;
+        wrapDom.style.height = wrapDom.offsetHeight;
+        domAddPosition(wrapDom);
+        const itemDom = [].slice.call(wrapDom.children);
+        const positionXY = [];
+        itemDom.forEach((v) => {
+            positionXY.push({dom: v, left: v.offsetLeft, top: v.offsetTop});
         });
+        positionXY.forEach((v) => {
+            const dom = v.dom;
+            domAddPosition(dom, 'absolute');
+            dom.style.left = `${v.left}px`;
+            dom.style.top = `${v.top}px`;
+            this.events(dom);
+        });
+        this.wrapDom = wrapDom;
+        this.itemDom = itemDom;
     }
 
     events(v) {
@@ -57,9 +65,6 @@ class Super {
     mouseUp(ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this.removeEventListener('mousedown', this.mouseUp);
-        this.removeEventListener('mousemove', this.mouseUp);
-        this.removeEventListener('mouseup', this.mouseUp);
     }
 }
 

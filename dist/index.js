@@ -6,13 +6,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var extend = require('zhf.extend');
 var getDomArray = require('zhf.get-dom-array');
+var domAddPosition = require('zhf.dom-add-position');
 
 var Super = function () {
     function Super(opts) {
         _classCallCheck(this, Super);
 
         this.opts = extend({
-            el: '', // 哪个容器需要拖拽功能
+            wrap: '', // 这个容器里的直属子级可以被拖拽
             callback: {
                 mouseDown: function mouseDown() {},
                 mouseMove: function mouseMove() {},
@@ -29,20 +30,27 @@ var Super = function () {
         value: function init() {
             var _this = this;
 
-            this.elDom = getDomArray(this.opts.el);
-            this.elDom.forEach(function (v, i) {
-                var parentDom = v.parentNode;
-                parentDom.style.width = parentDom.offsetWidth;
-                parentDom.style.height = parentDom.offsetHeight;
-                if (getComputedStyle(parentDom).position === 'static') {
-                    if (parentDom.style.position === '' || parentDom.style.position === 'static') {
-                        parentDom.style.position = 'relative';
-                    }
-                }
-
-                _this.events(v);
-                _this['parentDom' + i] = parentDom;
+            var wrapDom = getDomArray(this.opts.wrap)[0];
+            if (!wrapDom) {
+                return;
+            }
+            wrapDom.style.width = wrapDom.offsetWidth;
+            wrapDom.style.height = wrapDom.offsetHeight;
+            domAddPosition(wrapDom);
+            var itemDom = [].slice.call(wrapDom.children);
+            var positionXY = [];
+            itemDom.forEach(function (v) {
+                positionXY.push({ dom: v, left: v.offsetLeft, top: v.offsetTop });
             });
+            positionXY.forEach(function (v) {
+                var dom = v.dom;
+                domAddPosition(dom, 'absolute');
+                dom.style.left = v.left + 'px';
+                dom.style.top = v.top + 'px';
+                _this.events(dom);
+            });
+            this.wrapDom = wrapDom;
+            this.itemDom = itemDom;
         }
     }, {
         key: 'events',
@@ -70,9 +78,6 @@ var Super = function () {
         value: function mouseUp(ev) {
             ev.preventDefault();
             ev.stopPropagation();
-            this.removeEventListener('mousedown', this.mouseUp);
-            this.removeEventListener('mousemove', this.mouseUp);
-            this.removeEventListener('mouseup', this.mouseUp);
         }
     }]);
 

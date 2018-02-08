@@ -47,6 +47,7 @@ var Super = function () {
                 domAddPosition(dom, 'absolute');
                 dom.style.left = v.left + 'px';
                 dom.style.top = v.top + 'px';
+                dom.style.cursor = 'move';
                 _this.events(dom);
             });
             this.wrapDom = wrapDom;

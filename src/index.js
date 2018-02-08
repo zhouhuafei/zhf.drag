@@ -38,6 +38,7 @@ class Super {
             domAddPosition(dom, 'absolute');
             dom.style.left = `${v.left}px`;
             dom.style.top = `${v.top}px`;
+            dom.style.cursor = `move`;
             this.events(dom);
         });
         this.wrapDom = wrapDom;

@@ -1,8 +1,6 @@
-# 创建dom
+# 拖拽
+* commonjs规范
 ```
-const domCreate = require('zhf.dom-create');
-
-const dom = createDom(`<div>我是被创建的dom</div>`);
-
-console.log(dom.outerHTML); // <div>我是被创建的dom</div>
+const Drag = require('zhf.drag');
+new Drag({wrap: '.wrap'});
 ```

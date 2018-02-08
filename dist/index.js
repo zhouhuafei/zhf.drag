@@ -34,8 +34,8 @@ var Super = function () {
             if (!wrapDom) {
                 return;
             }
-            wrapDom.style.width = wrapDom.offsetWidth;
-            wrapDom.style.height = wrapDom.offsetHeight;
+            wrapDom.style.width = wrapDom.offsetWidth + 'px';
+            wrapDom.style.height = wrapDom.offsetHeight + 'px';
             domAddPosition(wrapDom);
             var itemDom = [].slice.call(wrapDom.children);
             var positionXY = [];

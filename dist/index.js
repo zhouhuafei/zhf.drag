@@ -67,18 +67,24 @@ var Super = function () {
             ev.stopPropagation();
             this.startX = 0;
             this.startY = 0;
+            this.opts.callback.mouseDown();
         }
     }, {
         key: 'mouseMove',
         value: function mouseMove(ev) {
             ev.preventDefault();
             ev.stopPropagation();
+            var opt = this.opts;
+            var callback = opts.callback;
+
+            callback.mouseMove();
         }
     }, {
         key: 'mouseUp',
         value: function mouseUp(ev) {
             ev.preventDefault();
             ev.stopPropagation();
+            this.opts.callback.mouseUp();
         }
     }]);
 

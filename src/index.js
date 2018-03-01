@@ -62,7 +62,7 @@ class Super {
     mouseMove(ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        const opt = this.opts;
+        const opts = this.opts;
         const callback = opts.callback;
 
         callback.mouseMove();

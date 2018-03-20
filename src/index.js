@@ -1,6 +1,7 @@
 const extend = require('zhf.extend');
 const getDomArray = require('zhf.get-dom-array');
 const domAddPosition = require('zhf.dom-add-position');
+const offset = require('zhf.offset');
 
 class Super {
     constructor(opts) {
@@ -46,32 +47,36 @@ class Super {
     }
 
     events(v) {
-        v.addEventListener('mousedown', this.mouseDown);
-        v.addEventListener('mousemove', this.mouseMove);
-        v.addEventListener('mouseup', this.mouseUp);
-    }
+        const self = this;
 
-    mouseDown(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        this.startX = 0;
-        this.startY = 0;
-        this.opts.callback.mouseDown();
-    }
+        function mouseDown(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const opts = self.opts;
+            const callback = opts.callback;
+            callback.mouseDown();
+        }
 
-    mouseMove(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        const opts = this.opts;
-        const callback = opts.callback;
+        function mouseMove(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const opts = self.opts;
+            const callback = opts.callback;
+            console.log(ev.clientX, ev.clientY);
+            callback.mouseMove();
+        }
 
-        callback.mouseMove();
-    }
+        function mouseUp(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            const opts = self.opts;
+            const callback = opts.callback;
+            callback.mouseUp();
+        }
 
-    mouseUp(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        this.opts.callback.mouseUp();
+        v.addEventListener('mousedown', mouseDown);
+        v.addEventListener('mousemove', mouseMove);
+        v.addEventListener('mouseup', mouseUp);
     }
 }
 

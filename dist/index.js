@@ -7,6 +7,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var extend = require('zhf.extend');
 var getDomArray = require('zhf.get-dom-array');
 var domAddPosition = require('zhf.dom-add-position');
+var offset = require('zhf.offset');
 
 var Super = function () {
     function Super(opts) {
@@ -56,35 +57,36 @@ var Super = function () {
     }, {
         key: 'events',
         value: function events(v) {
-            v.addEventListener('mousedown', this.mouseDown);
-            v.addEventListener('mousemove', this.mouseMove);
-            v.addEventListener('mouseup', this.mouseUp);
-        }
-    }, {
-        key: 'mouseDown',
-        value: function mouseDown(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            this.startX = 0;
-            this.startY = 0;
-            this.opts.callback.mouseDown();
-        }
-    }, {
-        key: 'mouseMove',
-        value: function mouseMove(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            var opt = this.opts;
-            var callback = opts.callback;
+            var self = this;
 
-            callback.mouseMove();
-        }
-    }, {
-        key: 'mouseUp',
-        value: function mouseUp(ev) {
-            ev.preventDefault();
-            ev.stopPropagation();
-            this.opts.callback.mouseUp();
+            function mouseDown(ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                var opts = self.opts;
+                var callback = opts.callback;
+                callback.mouseDown();
+            }
+
+            function mouseMove(ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                var opts = self.opts;
+                var callback = opts.callback;
+                console.log(ev.clientX, ev.clientY);
+                callback.mouseMove();
+            }
+
+            function mouseUp(ev) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                var opts = self.opts;
+                var callback = opts.callback;
+                callback.mouseUp();
+            }
+
+            v.addEventListener('mousedown', mouseDown);
+            v.addEventListener('mousemove', mouseMove);
+            v.addEventListener('mouseup', mouseUp);
         }
     }]);
 

@@ -37,9 +37,9 @@
         "jest": "^22.2.1"
     },
     "dependencies": {
-        "zhf.dom-add-position": "^1.0.3",
+        "zhf.dom-position": "^1.0.0",
         "zhf.extend": "^2.0.1",
-        "zhf.get-dom-array": "^1.0.0",
+        "zhf.get-dom-array": "^1.0.4",
         "zhf.offset": "^1.0.4"
     }
 }

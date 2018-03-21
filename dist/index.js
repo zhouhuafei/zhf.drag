@@ -6,7 +6,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var extend = require('zhf.extend');
 var getDomArray = require('zhf.get-dom-array');
-var domAddPosition = require('zhf.dom-add-position');
+var DomPosition = require('zhf.dom-position');
 var offset = require('zhf.offset');
 
 var Super = function () {
@@ -38,29 +38,14 @@ var Super = function () {
             });
             positionXY.forEach(function (v) {
                 var dom = v.dom;
-
-                function domHasPositon() {
-                    // dom有没有定位
-                    var domHasPositon = true;
-                    if (dom.style.position === '') {
-                        // 当没给dom定位的时候 getComputedStyle(dom).position 浏览器获取到的是'static' jest获取到的值是''
-                        if (getComputedStyle(dom).position === 'static' || getComputedStyle(dom).position === '') {
-                            domHasPositon = false;
-                        }
-                    }
-                    if (dom.style.position === 'static') {
-                        domHasPositon = false;
-                    }
-                    return domHasPositon;
-                }
-
-                if (!domHasPositon()) {
+                var domPosition = new DomPosition(dom);
+                var hasPosition = domPosition.hasPosition(); // 是否有非static类型的定位
+                if (!hasPosition) {
                     dom.style.position = 'absolute';
                     dom.style.left = v.left + 'px';
                     dom.style.top = v.top + 'px';
                     dom.style.cursor = 'move';
                 }
-
                 _this.events(dom);
             });
             this.itemDom = itemDom;
@@ -76,6 +61,8 @@ var Super = function () {
                 var opts = self.opts;
                 var callback = opts.callback;
                 callback.mouseDown();
+                document.addEventListener('mousemove', mouseMove);
+                document.addEventListener('mouseup', mouseUp);
             }
 
             function mouseMove(ev) {
@@ -93,11 +80,11 @@ var Super = function () {
                 var opts = self.opts;
                 var callback = opts.callback;
                 callback.mouseUp();
+                document.removeEventListener('mousemove', mouseMove);
+                document.removeEventListener('mouseup', mouseUp);
             }
 
             v.addEventListener('mousedown', mouseDown);
-            v.addEventListener('mousemove', mouseMove);
-            v.addEventListener('mouseup', mouseUp);
         }
     }]);
 

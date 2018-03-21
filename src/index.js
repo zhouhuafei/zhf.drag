@@ -1,6 +1,6 @@
 const extend = require('zhf.extend');
 const getDomArray = require('zhf.get-dom-array');
-const domAddPosition = require('zhf.dom-add-position');
+const DomPosition = require('zhf.dom-position');
 const offset = require('zhf.offset');
 
 class Super {
@@ -29,29 +29,14 @@ class Super {
         });
         positionXY.forEach((v) => {
             const dom = v.dom;
-
-            function domHasPositon() {
-                // dom有没有定位
-                let domHasPositon = true;
-                if (dom.style.position === '') {
-                    // 当没给dom定位的时候 getComputedStyle(dom).position 浏览器获取到的是'static' jest获取到的值是''
-                    if (getComputedStyle(dom).position === 'static' || getComputedStyle(dom).position === '') {
-                        domHasPositon = false;
-                    }
-                }
-                if (dom.style.position === 'static') {
-                    domHasPositon = false;
-                }
-                return domHasPositon;
-            }
-
-            if (!domHasPositon()) {
+            const domPosition = new DomPosition(dom);
+            const hasPosition = domPosition.hasPosition(); // 是否有非static类型的定位
+            if (!hasPosition) {
                 dom.style.position = `absolute`;
                 dom.style.left = `${v.left}px`;
                 dom.style.top = `${v.top}px`;
                 dom.style.cursor = `move`;
             }
-
             this.events(dom);
         });
         this.itemDom = itemDom;
@@ -66,6 +51,8 @@ class Super {
             const opts = self.opts;
             const callback = opts.callback;
             callback.mouseDown();
+            document.addEventListener('mousemove', mouseMove);
+            document.addEventListener('mouseup', mouseUp);
         }
 
         function mouseMove(ev) {
@@ -83,11 +70,11 @@ class Super {
             const opts = self.opts;
             const callback = opts.callback;
             callback.mouseUp();
+            document.removeEventListener('mousemove', mouseMove);
+            document.removeEventListener('mouseup', mouseUp);
         }
 
         v.addEventListener('mousedown', mouseDown);
-        v.addEventListener('mousemove', mouseMove);
-        v.addEventListener('mouseup', mouseUp);
     }
 }
 

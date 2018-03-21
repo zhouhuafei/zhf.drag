@@ -29,10 +29,29 @@ class Super {
         });
         positionXY.forEach((v) => {
             const dom = v.dom;
-            domAddPosition(dom, 'absolute');
-            dom.style.left = `${v.left}px`;
-            dom.style.top = `${v.top}px`;
-            dom.style.cursor = `move`;
+
+            function domHasPositon() {
+                // dom有没有定位
+                let domHasPositon = true;
+                if (dom.style.position === '') {
+                    // 当没给dom定位的时候 getComputedStyle(dom).position 浏览器获取到的是'static' jest获取到的值是''
+                    if (getComputedStyle(dom).position === 'static' || getComputedStyle(dom).position === '') {
+                        domHasPositon = false;
+                    }
+                }
+                if (dom.style.position === 'static') {
+                    domHasPositon = false;
+                }
+                return domHasPositon;
+            }
+
+            if (!domHasPositon()) {
+                dom.style.position = `absolute`;
+                dom.style.left = `${v.left}px`;
+                dom.style.top = `${v.top}px`;
+                dom.style.cursor = `move`;
+            }
+
             this.events(dom);
         });
         this.itemDom = itemDom;

@@ -5,3 +5,9 @@ new Drag({
     config: {},
     data: {},
 });
+new Drag({
+    item: '.zero',
+    callback: {},
+    config: {},
+    data: {},
+});

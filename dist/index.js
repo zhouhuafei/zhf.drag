@@ -14,7 +14,7 @@ var Super = function () {
         _classCallCheck(this, Super);
 
         this.opts = extend({
-            wrap: '', // 这个容器里的直属子级可以被拖拽
+            item: '', // 这个容器里的直属子级可以被拖拽
             callback: {
                 mouseDown: function mouseDown() {},
                 mouseMove: function mouseMove() {},
@@ -31,14 +31,7 @@ var Super = function () {
         value: function init() {
             var _this = this;
 
-            var wrapDom = getDomArray(this.opts.wrap)[0];
-            if (!wrapDom) {
-                return;
-            }
-            wrapDom.style.width = wrapDom.offsetWidth + 'px';
-            wrapDom.style.height = wrapDom.offsetHeight + 'px';
-            domAddPosition(wrapDom);
-            var itemDom = [].slice.call(wrapDom.children);
+            var itemDom = getDomArray(this.opts.item);
             var positionXY = [];
             itemDom.forEach(function (v) {
                 positionXY.push({ dom: v, left: v.offsetLeft, top: v.offsetTop });
@@ -51,7 +44,6 @@ var Super = function () {
                 dom.style.cursor = 'move';
                 _this.events(dom);
             });
-            this.wrapDom = wrapDom;
             this.itemDom = itemDom;
         }
     }, {

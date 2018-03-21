@@ -6,7 +6,7 @@ const offset = require('zhf.offset');
 class Super {
     constructor(opts) {
         this.opts = extend({
-            wrap: '', // 这个容器里的直属子级可以被拖拽
+            item: '', // 这个容器里的直属子级可以被拖拽
             callback: {
                 mouseDown: function () {
                 },
@@ -22,14 +22,7 @@ class Super {
     }
 
     init() {
-        const wrapDom = getDomArray(this.opts.wrap)[0];
-        if (!wrapDom) {
-            return;
-        }
-        wrapDom.style.width = `${wrapDom.offsetWidth}px`;
-        wrapDom.style.height = `${wrapDom.offsetHeight}px`;
-        domAddPosition(wrapDom);
-        const itemDom = [].slice.call(wrapDom.children);
+        const itemDom = getDomArray(this.opts.item);
         const positionXY = [];
         itemDom.forEach((v) => {
             positionXY.push({dom: v, left: v.offsetLeft, top: v.offsetTop});
@@ -42,7 +35,6 @@ class Super {
             dom.style.cursor = `move`;
             this.events(dom);
         });
-        this.wrapDom = wrapDom;
         this.itemDom = itemDom;
     }
 

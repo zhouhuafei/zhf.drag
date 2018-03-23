@@ -57,6 +57,8 @@ var Super = function () {
                 ev.stopPropagation();
                 var opts = self.opts;
                 var callback = opts.callback;
+                self.disX = ev.clientX - offset(this).left;
+                self.disY = ev.clientY - offset(this).top;
                 callback.mouseDown();
                 document.addEventListener('mousemove', mouseMove);
                 document.addEventListener('mouseup', mouseUp);
@@ -67,7 +69,12 @@ var Super = function () {
                 ev.stopPropagation();
                 var opts = self.opts;
                 var callback = opts.callback;
-                console.log(ev.clientX, ev.clientY);
+                var left = ev.clientX - self.disX;
+                var top = ev.clientY - self.disY;
+                this.style.right = 'auto';
+                this.style.bottom = 'auto';
+                this.style.left = left + 'px';
+                this.style.top = top + 'px';
                 // 要把right和bottom去掉，统一换成left，top
                 callback.mouseMove();
             }

@@ -1,12 +1,18 @@
 const Drag = require('../dist/index.min');
 new Drag({
-    item: '.item',
+    item: '.zero',
     callback: {},
     config: {},
     data: {},
 });
 new Drag({
-    item: '.zero',
+    item: '.wrap1 .item',
+    callback: {},
+    config: {},
+    data: {},
+});
+new Drag({
+    item: '.wrap2 .item',
     callback: {},
     config: {},
     data: {},

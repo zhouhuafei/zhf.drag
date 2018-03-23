@@ -14,29 +14,28 @@ class Super {
                 mouseUp: function () {
                 },
             },
-            config: {},
+            config: {
+                hasIconMove: true,
+                direction: 'all', // 'row' 'col' 'all'
+            },
             data: {},
         }, opts);
         this.init();
     }
 
     init() {
-        const itemAll = getDomArray(this.opts.item);
-        const positionXY = [];
-        itemAll.forEach((v) => {
-            positionXY.push({dom: v, left: v.offsetLeft, top: v.offsetTop});
-        });
-        positionXY.forEach((v) => {
-            const dom = v.dom;
+        const opts = this.opts;
+        const config = opts.config;
+        const itemAll = getDomArray(opts.item);
+        itemAll.forEach((dom) => {
             if (getComputedStyle(dom).position === 'static') {
-                dom.style.position = `absolute`;
-                dom.style.left = `${v.left}px`;
-                dom.style.top = `${v.top}px`;
+                dom.style.position = `relative`;
+            }
+            if (config.hasIconMove && getComputedStyle(dom).cursor !== 'move') {
                 dom.style.cursor = `move`;
             }
             this.events(dom);
         });
-        this.itemAll = itemAll;
     }
 
     events(v) {
@@ -46,38 +45,49 @@ class Super {
             ev.preventDefault();
             ev.stopPropagation();
             const opts = self.opts;
-            const callback = opts.callback;
-            callback.mouseDown();
             self.item = this;
-            self.disX = ev.clientX - offset(this).left;
-            self.disY = ev.clientY - offset(this).top;
-            console.log(offset(this).left, offset(this).top);
+            const oGetComputedStyle = getComputedStyle(this);
+            self.oGetComputedStyle = oGetComputedStyle;
+            self.disX = ev.clientX - oGetComputedStyle.left.replace('px', '');
+            self.disY = ev.clientY - oGetComputedStyle.top.replace('px', '');
             document.addEventListener('mousemove', mouseMove);
             document.addEventListener('mouseup', mouseUp);
+            const callback = opts.callback;
+            callback.mouseDown({left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top});
         }
 
         function mouseMove(ev) {
             ev.preventDefault();
             ev.stopPropagation();
             const opts = self.opts;
-            const callback = opts.callback;
-            callback.mouseMove();
+            const config = opts.config;
+            const direction = config.direction;
             const left = ev.clientX - self.disX;
             const top = ev.clientY - self.disY;
             self.item.style.right = 'auto';
             self.item.style.bottom = 'auto';
-            self.item.style.left = `${left}px`;
-            self.item.style.top = `${top}px`;
+            if (direction === 'all') {
+                self.item.style.left = `${left}px`;
+                self.item.style.top = `${top}px`;
+            }
+            if (direction === 'col') {
+                self.item.style.top = `${top}px`;
+            }
+            if (direction === 'row') {
+                self.item.style.left = `${left}px`;
+            }
+            const callback = opts.callback;
+            callback.mouseMove({left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top});
         }
 
         function mouseUp(ev) {
             ev.preventDefault();
             ev.stopPropagation();
             const opts = self.opts;
-            const callback = opts.callback;
-            callback.mouseUp();
             document.removeEventListener('mousemove', mouseMove);
             document.removeEventListener('mouseup', mouseUp);
+            const callback = opts.callback;
+            callback.mouseUp({left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top});
         }
 
         v.addEventListener('mousedown', mouseDown);

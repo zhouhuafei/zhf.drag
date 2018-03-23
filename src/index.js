@@ -1,6 +1,5 @@
 const extend = require('zhf.extend');
 const getDomArray = require('zhf.get-dom-array');
-const domAddPosition = require('zhf.dom-add-position');
 const offset = require('zhf.offset');
 
 class Super {
@@ -29,29 +28,12 @@ class Super {
         });
         positionXY.forEach((v) => {
             const dom = v.dom;
-
-            function domHasPositon() {
-                // dom有没有定位
-                let domHasPositon = true;
-                if (dom.style.position === '') {
-                    // 当没给dom定位的时候 getComputedStyle(dom).position 浏览器获取到的是'static' jest获取到的值是''
-                    if (getComputedStyle(dom).position === 'static' || getComputedStyle(dom).position === '') {
-                        domHasPositon = false;
-                    }
-                }
-                if (dom.style.position === 'static') {
-                    domHasPositon = false;
-                }
-                return domHasPositon;
-            }
-
-            if (!domHasPositon()) {
+            if (getComputedStyle(dom).position === 'static') {
                 dom.style.position = `absolute`;
                 dom.style.left = `${v.left}px`;
                 dom.style.top = `${v.top}px`;
                 dom.style.cursor = `move`;
             }
-
             this.events(dom);
         });
         this.itemDom = itemDom;
@@ -74,6 +56,7 @@ class Super {
             const opts = self.opts;
             const callback = opts.callback;
             console.log(ev.clientX, ev.clientY);
+            // 要把right和bottom去掉，统一换成left，top
             callback.mouseMove();
         }
 

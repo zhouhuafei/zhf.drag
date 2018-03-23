@@ -48,6 +48,8 @@ class Super {
             const opts = self.opts;
             const callback = opts.callback;
             callback.mouseDown();
+            document.addEventListener('mousemove', mouseMove);
+            document.addEventListener('mouseup', mouseUp);
         }
 
         function mouseMove(ev) {
@@ -66,11 +68,11 @@ class Super {
             const opts = self.opts;
             const callback = opts.callback;
             callback.mouseUp();
+            document.removeEventListener('mousemove', mouseMove);
+            document.removeEventListener('mouseup', mouseUp);
         }
 
         v.addEventListener('mousedown', mouseDown);
-        v.addEventListener('mousemove', mouseMove);
-        v.addEventListener('mouseup', mouseUp);
     }
 }
 

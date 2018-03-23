@@ -38,7 +38,7 @@
     },
     "dependencies": {
         "zhf.extend": "^2.0.1",
-        "zhf.get-dom-array": "^1.0.0",
+        "zhf.get-dom-array": "^1.0.4",
         "zhf.offset": "^1.0.4"
     }
 }

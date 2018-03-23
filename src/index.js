@@ -21,9 +21,9 @@ class Super {
     }
 
     init() {
-        const itemDom = getDomArray(this.opts.item);
+        const itemAll = getDomArray(this.opts.item);
         const positionXY = [];
-        itemDom.forEach((v) => {
+        itemAll.forEach((v) => {
             positionXY.push({dom: v, left: v.offsetLeft, top: v.offsetTop});
         });
         positionXY.forEach((v) => {
@@ -36,7 +36,7 @@ class Super {
             }
             this.events(dom);
         });
-        this.itemDom = itemDom;
+        this.itemAll = itemAll;
     }
 
     events(v) {
@@ -47,9 +47,11 @@ class Super {
             ev.stopPropagation();
             const opts = self.opts;
             const callback = opts.callback;
+            callback.mouseDown();
+            self.item = this;
             self.disX = ev.clientX - offset(this).left;
             self.disY = ev.clientY - offset(this).top;
-            callback.mouseDown();
+            console.log(offset(this).left, offset(this).top);
             document.addEventListener('mousemove', mouseMove);
             document.addEventListener('mouseup', mouseUp);
         }
@@ -59,14 +61,13 @@ class Super {
             ev.stopPropagation();
             const opts = self.opts;
             const callback = opts.callback;
+            callback.mouseMove();
             const left = ev.clientX - self.disX;
             const top = ev.clientY - self.disY;
-            this.style.right = 'auto';
-            this.style.bottom = 'auto';
-            this.style.left = `${left}px`;
-            this.style.top = `${top}px`;
-            // 要把right和bottom去掉，统一换成left，top
-            callback.mouseMove();
+            self.item.style.right = 'auto';
+            self.item.style.bottom = 'auto';
+            self.item.style.left = `${left}px`;
+            self.item.style.top = `${top}px`;
         }
 
         function mouseUp(ev) {

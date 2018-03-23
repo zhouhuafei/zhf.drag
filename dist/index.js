@@ -30,9 +30,9 @@ var Super = function () {
         value: function init() {
             var _this = this;
 
-            var itemDom = getDomArray(this.opts.item);
+            var itemAll = getDomArray(this.opts.item);
             var positionXY = [];
-            itemDom.forEach(function (v) {
+            itemAll.forEach(function (v) {
                 positionXY.push({ dom: v, left: v.offsetLeft, top: v.offsetTop });
             });
             positionXY.forEach(function (v) {
@@ -45,7 +45,7 @@ var Super = function () {
                 }
                 _this.events(dom);
             });
-            this.itemDom = itemDom;
+            this.itemAll = itemAll;
         }
     }, {
         key: 'events',
@@ -57,9 +57,11 @@ var Super = function () {
                 ev.stopPropagation();
                 var opts = self.opts;
                 var callback = opts.callback;
+                callback.mouseDown();
+                self.item = this;
                 self.disX = ev.clientX - offset(this).left;
                 self.disY = ev.clientY - offset(this).top;
-                callback.mouseDown();
+                console.log(offset(this).left, offset(this).top);
                 document.addEventListener('mousemove', mouseMove);
                 document.addEventListener('mouseup', mouseUp);
             }
@@ -69,14 +71,13 @@ var Super = function () {
                 ev.stopPropagation();
                 var opts = self.opts;
                 var callback = opts.callback;
+                callback.mouseMove();
                 var left = ev.clientX - self.disX;
                 var top = ev.clientY - self.disY;
-                this.style.right = 'auto';
-                this.style.bottom = 'auto';
-                this.style.left = left + 'px';
-                this.style.top = top + 'px';
-                // 要把right和bottom去掉，统一换成left，top
-                callback.mouseMove();
+                self.item.style.right = 'auto';
+                self.item.style.bottom = 'auto';
+                self.item.style.left = left + 'px';
+                self.item.style.top = top + 'px';
             }
 
             function mouseUp(ev) {

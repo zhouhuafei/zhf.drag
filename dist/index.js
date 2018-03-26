@@ -25,7 +25,8 @@ var Super = function () {
                 limitLeftMax: null,
                 limitTopMin: null,
                 limitTopMax: null,
-                isAdsorption: true
+                isAdsorption: true,
+                adsorptionDistance: 20
             },
             data: {}
         }, opts);

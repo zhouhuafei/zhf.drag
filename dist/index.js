@@ -20,7 +20,13 @@ var Super = function () {
             },
             config: {
                 hasIconMove: true,
-                direction: 'all' // 'row' 'col' 'all'
+                direction: 'all', // 'row' 'col' 'all'
+                limitLeftMin: null,
+                limitLeftMax: null,
+                limitTopMin: null,
+                limitTopMax: null,
+                isAdsorption: true,
+                adsorptionDistance: 50
             },
             data: {}
         }, opts);
@@ -73,6 +79,52 @@ var Super = function () {
                 var direction = config.direction;
                 var left = ev.clientX - self.disX;
                 var top = ev.clientY - self.disY;
+                if (config.limitLeftMin !== null) {
+                    // 如果限制左边
+                    if (config.isAdsorption) {
+                        // 如果具备吸附效果
+                        if (left <= config.limitLeftMin + config.adsorptionDistance) {
+                            left = config.limitLeftMin;
+                        }
+                    } else {
+                        if (left <= config.limitLeftMin) {
+                            left = config.limitLeftMin;
+                        }
+                    }
+                }
+                if (config.limitLeftMax !== null) {
+                    if (config.isAdsorption) {
+                        if (left >= config.limitLeftMax - config.adsorptionDistance) {
+                            left = config.limitLeftMax;
+                        }
+                    } else {
+                        if (left >= config.limitLeftMax) {
+                            left = config.limitLeftMax;
+                        }
+                    }
+                }
+                if (config.limitTopMin !== null) {
+                    if (config.isAdsorption) {
+                        if (top <= config.limitTopMin + config.adsorptionDistance) {
+                            top = config.limitTopMin;
+                        }
+                    } else {
+                        if (top <= config.limitTopMin) {
+                            top = config.limitTopMin;
+                        }
+                    }
+                }
+                if (config.limitTopMax !== null) {
+                    if (config.isAdsorption) {
+                        if (top >= config.limitTopMax - config.adsorptionDistance) {
+                            top = config.limitTopMax;
+                        }
+                    } else {
+                        if (top >= config.limitTopMax) {
+                            top = config.limitTopMax;
+                        }
+                    }
+                }
                 self.item.style.right = 'auto';
                 self.item.style.bottom = 'auto';
                 if (direction === 'all') {

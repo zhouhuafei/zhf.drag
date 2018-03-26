@@ -88,7 +88,17 @@
                 background: rgba(255, 0, 0, 0.8);
             }
 
-            .zero {
+            .zero-wrap {
+                width: 400px;
+                height: 200px;
+                background: #cccccc;
+                position: absolute;
+                left: 50%;
+                top: 50px;
+                margin-left: -200px;
+            }
+
+            .zero-wrap .zero {
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -99,8 +109,8 @@
                 background: rgba(0, 0, 0, 0.8);
                 cursor: move;
                 position: absolute;
-                left: 100px;
-                bottom: 100px;
+                left: 180px;
+                top: 80px;
             }
         </style>
     </head>
@@ -145,7 +155,9 @@
                 <div class="item-drag"></div>
             </div>
         </div>
-        <div class="zero">0</div>
+        <div class="zero-wrap">
+            <div class="zero">0</div>
+        </div>
         <script src="index.min.js"></script>
     </body>
 </html>

@@ -1,9 +1,16 @@
 const Drag = require('../dist/index.min');
 const offset = require('zhf.offset');
+const zeroWrap = document.querySelector('.zero-wrap');
+const zero = zeroWrap.querySelector('.zero');
 new Drag({
     item: '.zero',
     callback: {},
-    config: {},
+    config: {
+        limitLeftMin: 0,
+        limitLeftMax: zeroWrap.offsetWidth - zero.offsetWidth,
+        limitTopMin: 0,
+        limitTopMax: zeroWrap.offsetHeight - zero.offsetHeight,
+    },
     data: {},
 });
 new Drag({

@@ -6,7 +6,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var extend = require('zhf.extend');
 var getDomArray = require('zhf.get-dom-array');
-var offset = require('zhf.offset');
 
 var Super = function () {
     function Super(opts) {
@@ -63,7 +62,7 @@ var Super = function () {
                 document.addEventListener('mousemove', mouseMove);
                 document.addEventListener('mouseup', mouseUp);
                 var callback = opts.callback;
-                callback.mouseDown({ left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top });
+                callback.mouseDown({ dom: self.item, left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top });
             }
 
             function mouseMove(ev) {
@@ -87,7 +86,7 @@ var Super = function () {
                     self.item.style.left = left + 'px';
                 }
                 var callback = opts.callback;
-                callback.mouseMove({ left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top });
+                callback.mouseMove({ dom: self.item, left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top });
             }
 
             function mouseUp(ev) {
@@ -97,7 +96,7 @@ var Super = function () {
                 document.removeEventListener('mousemove', mouseMove);
                 document.removeEventListener('mouseup', mouseUp);
                 var callback = opts.callback;
-                callback.mouseUp({ left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top });
+                callback.mouseUp({ dom: self.item, left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top });
             }
 
             v.addEventListener('mousedown', mouseDown);

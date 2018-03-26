@@ -1,6 +1,5 @@
 const extend = require('zhf.extend');
 const getDomArray = require('zhf.get-dom-array');
-const offset = require('zhf.offset');
 
 class Super {
     constructor(opts) {
@@ -53,7 +52,7 @@ class Super {
             document.addEventListener('mousemove', mouseMove);
             document.addEventListener('mouseup', mouseUp);
             const callback = opts.callback;
-            callback.mouseDown({left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top});
+            callback.mouseDown({dom: self.item, left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top});
         }
 
         function mouseMove(ev) {
@@ -77,7 +76,7 @@ class Super {
                 self.item.style.left = `${left}px`;
             }
             const callback = opts.callback;
-            callback.mouseMove({left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top});
+            callback.mouseMove({dom: self.item, left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top});
         }
 
         function mouseUp(ev) {
@@ -87,7 +86,7 @@ class Super {
             document.removeEventListener('mousemove', mouseMove);
             document.removeEventListener('mouseup', mouseUp);
             const callback = opts.callback;
-            callback.mouseUp({left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top});
+            callback.mouseUp({dom: self.item, left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top});
         }
 
         v.addEventListener('mousedown', mouseDown);

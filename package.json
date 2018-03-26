@@ -34,11 +34,11 @@
         "gulp-browserify": "^0.5.1",
         "gulp-rename": "^1.2.2",
         "gulp-uglify": "^3.0.0",
-        "jest": "^22.2.1"
+        "jest": "^22.2.1",
+        "zhf.offset": "^1.0.4"
     },
     "dependencies": {
         "zhf.extend": "^2.0.1",
-        "zhf.get-dom-array": "^1.0.4",
-        "zhf.offset": "^1.0.4"
+        "zhf.get-dom-array": "^1.0.4"
     }
 }

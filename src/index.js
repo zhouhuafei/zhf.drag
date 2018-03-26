@@ -21,7 +21,7 @@ class Super {
                 limitTopMin: null,
                 limitTopMax: null,
                 isAdsorption: true,
-                adsorptionDistance: 50,
+                adsorptionDistance: 20,
             },
             data: {},
         }, opts);

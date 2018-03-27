@@ -1,12 +1,11 @@
 const Drag = require('../dist/index.min');
 const offset = require('zhf.offset');
 const checkDomImpact = require('zhf.check-dom-impact'); // 检测dom碰撞
-const itemAll = document.querySelectorAll('.wrap1 .item');
-const itemLen = itemAll.length;
+// zero
 const zeroWrap = document.querySelector('.zero-wrap');
 const zero = zeroWrap.querySelector('.zero');
 new Drag({
-    item: '.zero',
+    item: zero,
     callback: {},
     config: {
         limitLeftMin: 0,
@@ -17,45 +16,30 @@ new Drag({
     },
     data: {},
 });
-itemAll.forEach(function (item, i) {
-    new Drag({
-        item: item,
-        callback: {},
-        config: {
-            limitTopMin: -i * item.offsetHeight,
-            limitTopMax: (itemLen - 1 - i) * item.offsetHeight,
-            direction: 'col',
-        },
-        data: {},
-    });
-});
 
-new Drag({
-    item: '.wrap2 .item-drag',
-    callback: {
-        mouseDown: function (obj) {
-            obj.dom.style.transition = '0s';
-            obj.dom.parentNode.classList.add('active');
-        },
-        mouseMove: function (obj) {
-            const arr = [];
-            itemAll.forEach(function (item) {
-                if (checkDomImpact(obj.dom, item)) {
-                    arr.push(item);
-                }
-            });
-            // 碰撞之后检测距离谁最近
-            if (arr.length) {
-                console.log(arr);
-            }
-        },
-        mouseUp: function (obj) {
-            obj.dom.style.transition = '0.4s';
-            obj.dom.style.left = '0';
-            obj.dom.style.top = '0';
-            obj.dom.parentNode.classList.remove('active');
-        },
-    },
-    config: {},
-    data: {},
-});
+function setPositionWH() {
+    const wrap1 = document.querySelector('.wrap1');
+    const item1All = wrap1.querySelectorAll('.item');
+    const wrap2 = document.querySelector('.wrap2');
+    const item2All = wrap2.querySelectorAll('.item');
+    const postionXY = [];
+    item1All.forEach(function (item) {
+        postionXY.push({left: item.offsetLeft, top: item.offsetTop});
+    });
+    item1All.forEach(function (item) {
+        item.style.position = 'absolute';
+        item.style.left = '';
+        item.style.top = '';
+    });
+}
+
+setPositionWH();
+
+// wrap1 和 wrap2 拖拽
+const wrap1 = document.querySelector('.wrap1');
+const item1All = wrap1.querySelectorAll('.item');
+const item1Len = item1All.length;
+const wrap2 = document.querySelector('.wrap2');
+const item2All = wrap2.querySelectorAll('.item');
+const item2Len = item2All.length;
+wrap1.insertBefore(item1All[1], item1All[0]);

@@ -58,7 +58,12 @@ class Super {
             document.addEventListener('mousemove', mouseMove);
             document.addEventListener('mouseup', mouseUp);
             const callback = opts.callback;
-            callback.mouseDown({dom: self.item, left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top});
+            callback.mouseDown({
+                ev: ev,
+                dom: self.item,
+                left: self.oGetComputedStyle.left,
+                top: self.oGetComputedStyle.top,
+            });
         }
 
         function mouseMove(ev) {
@@ -126,7 +131,12 @@ class Super {
                 self.item.style.left = `${left}px`;
             }
             const callback = opts.callback;
-            callback.mouseMove({dom: self.item, left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top});
+            callback.mouseMove({
+                ev: ev,
+                dom: self.item,
+                left: self.oGetComputedStyle.left,
+                top: self.oGetComputedStyle.top,
+            });
         }
 
         function mouseUp(ev) {
@@ -136,7 +146,12 @@ class Super {
             document.removeEventListener('mousemove', mouseMove);
             document.removeEventListener('mouseup', mouseUp);
             const callback = opts.callback;
-            callback.mouseUp({dom: self.item, left: self.oGetComputedStyle.left, top: self.oGetComputedStyle.top});
+            callback.mouseUp({
+                ev: ev,
+                dom: self.item,
+                left: self.oGetComputedStyle.left,
+                top: self.oGetComputedStyle.top,
+            });
         }
 
         v.addEventListener('mousedown', mouseDown);

@@ -1,7 +1,5 @@
-const Sub = require('../dist/index.min');
+const Drag = require('../dist/index.min');
 
-test('no test', () => {
-    const sub = new Sub();
-    console.log(sub);
+test('拖拽', () => {
     expect(true).toEqual(true);
 });

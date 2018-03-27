@@ -20,7 +20,7 @@ class Super {
                 limitLeftMax: null,
                 limitTopMin: null,
                 limitTopMax: null,
-                isAdsorption: true,
+                isAdsorption: false,
                 adsorptionDistance: 20,
             },
             data: {},

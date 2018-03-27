@@ -14,9 +14,12 @@ var Super = function () {
         this.opts = extend({
             item: '', // 这个容器里的直属子级可以被拖拽
             callback: {
-                mouseDown: function mouseDown() {},
-                mouseMove: function mouseMove() {},
-                mouseUp: function mouseUp() {}
+                mouseDownBefore: function mouseDownBefore() {},
+                mouseDownAfter: function mouseDownAfter() {},
+                mouseMoveBefore: function mouseMoveBefore() {},
+                mouseMoveAfter: function mouseMoveAfter() {},
+                mouseUpBefore: function mouseUpBefore() {},
+                mouseUpAfter: function mouseUpAfter() {}
             },
             config: {
                 hasIconMove: true,
@@ -61,14 +64,20 @@ var Super = function () {
                 ev.stopPropagation();
                 var opts = self.opts;
                 self.item = this;
+                var callback = opts.callback;
+                callback.mouseDownBefore({
+                    self: self,
+                    ev: ev,
+                    dom: self.item
+                });
                 var oGetComputedStyle = getComputedStyle(this);
                 self.oGetComputedStyle = oGetComputedStyle;
                 self.disX = ev.clientX - oGetComputedStyle.left.replace('px', '');
                 self.disY = ev.clientY - oGetComputedStyle.top.replace('px', '');
                 document.addEventListener('mousemove', mouseMove);
                 document.addEventListener('mouseup', mouseUp);
-                var callback = opts.callback;
-                callback.mouseDown({
+                callback.mouseDownAfter({
+                    self: self,
                     ev: ev,
                     dom: self.item,
                     left: self.oGetComputedStyle.left,
@@ -80,6 +89,12 @@ var Super = function () {
                 ev.preventDefault();
                 ev.stopPropagation();
                 var opts = self.opts;
+                var callback = opts.callback;
+                callback.mouseMoveBefore({
+                    self: self,
+                    ev: ev,
+                    dom: self.item
+                });
                 var config = opts.config;
                 var direction = config.direction;
                 var left = ev.clientX - self.disX;
@@ -142,8 +157,8 @@ var Super = function () {
                 if (direction === 'row') {
                     self.item.style.left = left + 'px';
                 }
-                var callback = opts.callback;
-                callback.mouseMove({
+                callback.mouseMoveAfter({
+                    self: self,
                     ev: ev,
                     dom: self.item,
                     left: self.oGetComputedStyle.left,
@@ -155,10 +170,16 @@ var Super = function () {
                 ev.preventDefault();
                 ev.stopPropagation();
                 var opts = self.opts;
+                var callback = opts.callback;
+                callback.mouseUpBefore({
+                    self: self,
+                    ev: ev,
+                    dom: self.item
+                });
                 document.removeEventListener('mousemove', mouseMove);
                 document.removeEventListener('mouseup', mouseUp);
-                var callback = opts.callback;
-                callback.mouseUp({
+                callback.mouseUpAfter({
+                    self: self,
                     ev: ev,
                     dom: self.item,
                     left: self.oGetComputedStyle.left,

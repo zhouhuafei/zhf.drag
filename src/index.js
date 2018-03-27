@@ -6,11 +6,17 @@ class Super {
         this.opts = extend({
             item: '', // 这个容器里的直属子级可以被拖拽
             callback: {
-                mouseDown: function () {
+                mouseDownBefore: function () {
                 },
-                mouseMove: function () {
+                mouseDownAfter: function () {
                 },
-                mouseUp: function () {
+                mouseMoveBefore: function () {
+                },
+                mouseMoveAfter: function () {
+                },
+                mouseUpBefore: function () {
+                },
+                mouseUpAfter: function () {
                 },
             },
             config: {
@@ -51,14 +57,20 @@ class Super {
             ev.stopPropagation();
             const opts = self.opts;
             self.item = this;
+            const callback = opts.callback;
+            callback.mouseDownBefore({
+                self: self,
+                ev: ev,
+                dom: self.item,
+            });
             const oGetComputedStyle = getComputedStyle(this);
             self.oGetComputedStyle = oGetComputedStyle;
             self.disX = ev.clientX - oGetComputedStyle.left.replace('px', '');
             self.disY = ev.clientY - oGetComputedStyle.top.replace('px', '');
             document.addEventListener('mousemove', mouseMove);
             document.addEventListener('mouseup', mouseUp);
-            const callback = opts.callback;
-            callback.mouseDown({
+            callback.mouseDownAfter({
+                self: self,
                 ev: ev,
                 dom: self.item,
                 left: self.oGetComputedStyle.left,
@@ -70,6 +82,12 @@ class Super {
             ev.preventDefault();
             ev.stopPropagation();
             const opts = self.opts;
+            const callback = opts.callback;
+            callback.mouseMoveBefore({
+                self: self,
+                ev: ev,
+                dom: self.item,
+            });
             const config = opts.config;
             const direction = config.direction;
             let left = ev.clientX - self.disX;
@@ -130,8 +148,8 @@ class Super {
             if (direction === 'row') {
                 self.item.style.left = `${left}px`;
             }
-            const callback = opts.callback;
-            callback.mouseMove({
+            callback.mouseMoveAfter({
+                self: self,
                 ev: ev,
                 dom: self.item,
                 left: self.oGetComputedStyle.left,
@@ -143,10 +161,16 @@ class Super {
             ev.preventDefault();
             ev.stopPropagation();
             const opts = self.opts;
+            const callback = opts.callback;
+            callback.mouseUpBefore({
+                self: self,
+                ev: ev,
+                dom: self.item,
+            });
             document.removeEventListener('mousemove', mouseMove);
             document.removeEventListener('mouseup', mouseUp);
-            const callback = opts.callback;
-            callback.mouseUp({
+            callback.mouseUpAfter({
+                self: self,
                 ev: ev,
                 dom: self.item,
                 left: self.oGetComputedStyle.left,

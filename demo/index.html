@@ -72,12 +72,13 @@
                 cursor: move;
             }
 
-            .wrap .item:nth-of-type(2n) {
-                height: 80px;
-                background: rgba(0, 0, 0, 0.6);
+            .wrap1 .item.active {
+                position: absolute;
+                opacity: 0.9;
+                z-index: 9999;
             }
 
-            .wrap .item.active {
+            .wrap2 .item.active {
                 background: rgba(255, 0, 0, 0.8);
             }
 
@@ -86,7 +87,8 @@
                 align-items: center;
                 justify-content: center;
                 color: #ffffff;
-                background: rgba(255, 0, 0, 0.8);
+                background: rgba(255, 0, 0, 1);
+                height: 200px;
             }
 
             .zero-wrap {
@@ -116,26 +118,26 @@
     </head>
     <body>
         <div class="wrap wrap1">
-            <div class="item"><a href="http://www.baidu.com">1</a></div>
-            <div class="item"><a href="http://www.baidu.com">2</a></div>
-            <div class="item"><a href="http://www.baidu.com">3</a></div>
-            <div class="item"><a href="http://www.baidu.com">4</a></div>
-            <div class="item"><a href="http://www.baidu.com">5</a></div>
-            <div class="item"><a href="http://www.baidu.com">6</a></div>
-            <div class="item"><a href="http://www.baidu.com">7</a></div>
-            <div class="item"><a href="http://www.baidu.com">8</a></div>
-            <div class="item"><a href="http://www.baidu.com">9</a></div>
+            <div class="item item1"><a href="http://www.baidu.com">1</a></div>
+            <div class="item item2"><a href="http://www.baidu.com">2</a></div>
+            <div class="item item3"><a href="http://www.baidu.com">3</a></div>
+            <div class="item item4"><a href="http://www.baidu.com">4</a></div>
+            <div class="item item5"><a href="http://www.baidu.com">5</a></div>
+            <div class="item item6"><a href="http://www.baidu.com">6</a></div>
+            <div class="item item7"><a href="http://www.baidu.com">7</a></div>
+            <div class="item item8"><a href="http://www.baidu.com">8</a></div>
+            <div class="item item9"><a href="http://www.baidu.com">9</a></div>
         </div>
         <div class="wrap wrap2">
-            <div class="item"><a href="http://www.baidu.com">1</a></div>
-            <div class="item"><a href="http://www.baidu.com">2</a></div>
-            <div class="item"><a href="http://www.baidu.com">3</a></div>
-            <div class="item"><a href="http://www.baidu.com">4</a></div>
-            <div class="item"><a href="http://www.baidu.com">5</a></div>
-            <div class="item"><a href="http://www.baidu.com">6</a></div>
-            <div class="item"><a href="http://www.baidu.com">7</a></div>
-            <div class="item"><a href="http://www.baidu.com">8</a></div>
-            <div class="item"><a href="http://www.baidu.com">9</a></div>
+            <div class="item item1"><a href="http://www.baidu.com">1</a></div>
+            <div class="item item2"><a href="http://www.baidu.com">2</a></div>
+            <div class="item item3"><a href="http://www.baidu.com">3</a></div>
+            <div class="item item4"><a href="http://www.baidu.com">4</a></div>
+            <div class="item item5"><a href="http://www.baidu.com">5</a></div>
+            <div class="item item6"><a href="http://www.baidu.com">6</a></div>
+            <div class="item item7"><a href="http://www.baidu.com">7</a></div>
+            <div class="item item8"><a href="http://www.baidu.com">8</a></div>
+            <div class="item item9"><a href="http://www.baidu.com">9</a></div>
         </div>
         <div class="zero-wrap">
             <div class="zero">0</div>

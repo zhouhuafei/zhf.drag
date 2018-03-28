@@ -1,6 +1,17 @@
 const Drag = require('../dist/index.min');
 const offset = require('zhf.offset');
 const checkDomImpact = require('zhf.check-dom-impact'); // 检测dom碰撞
+// 随机添加样式
+let strStyle = '';
+for (let i = 1; i <= 9; i++) {
+    const r = Math.round(Math.random() * 255);
+    const g = Math.round(Math.random() * 255);
+    const b = Math.round(Math.random() * 255);
+    const a = Math.round(Math.random() * (10 - 1) + 1) / 10; // 0.1 - 0.9
+    const h = Math.round(Math.random() * (120 - 40) + 40);
+    strStyle += `.wrap .item${i}{height:${h}px;background:rgba(${r},${g},${b},1);}`;
+}
+document.querySelector('style').innerHTML += strStyle;
 
 // zero
 const zeroWrap = document.querySelector('.zero-wrap');
@@ -26,14 +37,13 @@ hint.innerHTML = `拖拽放到此处`;
 // wrap1拖拽
 const wrap1 = document.querySelector('.wrap1');
 const item1All = wrap1.querySelectorAll('.item');
-const item1Len = item1All.length;
-new Drag({
+const drap = new Drag({
     item: item1All,
     callback: {
         mouseDownBefore(obj) {
             const self = obj.self;
             const dom = obj.dom;
-            dom.style.position = 'absolute';
+            dom.classList.add('active');
             dom.style.left = `${dom.offsetLeft}px`;
             dom.style.top = `${dom.offsetTop}px`;
             hint.style.width = `${dom.offsetWidth}px`;
@@ -43,6 +53,7 @@ new Drag({
         },
         mouseMoveAfter(obj) {
             const dom = obj.dom;
+            const moveDirectionY = obj.moveDirectionY;
             const impact = [];
             item1All.forEach(function (item) {
                 if (item !== dom && checkDomImpact(dom, item)) {
@@ -55,18 +66,17 @@ new Drag({
                 const domBottom = domTop + domHeight;
                 const itemTop = item.offsetTop;
                 const itemHeight = item.offsetHeight;
-                const itemBottom = itemTop + itemHeight;
-                if (domTop <= itemTop + itemHeight / 2 && domBottom > itemTop + itemHeight / 2) {
-                    // console.log('从下往上');
+                if (moveDirectionY === 'top' && domTop <= itemTop + itemHeight / 2) {
+                    wrap1.insertBefore(hint, item);
                 }
-                if (domTop < itemTop + itemHeight / 2 && domBottom >= itemTop + itemHeight / 2) {
-                    // console.log('从上往下');
+                if (moveDirectionY === 'bottom' && domBottom >= itemTop + itemHeight / 2) {
+                    wrap1.insertBefore(hint, item.nextElementSibling); // item.nextElementSibling如果是null相当于执行了appendChild
                 }
             });
-            // 换位置待续...
         },
         mouseUpAfter(obj) {
             const dom = obj.dom;
+            dom.classList.remove('active');
             dom.setAttribute('style', '');
             wrap1.insertBefore(obj.dom, hint);
             wrap1.removeChild(hint);
@@ -83,3 +93,16 @@ new Drag({
 const wrap2 = document.querySelector('.wrap2');
 const item2All = wrap2.querySelectorAll('.item');
 const item2Len = item2All.length;
+new Drag({
+    item: item2All,
+    callback: {
+        mouseDownBefore(obj) {
+        },
+        mouseMoveAfter(obj) {
+        },
+        mouseUpAfter(obj) {
+        },
+    },
+    config: {},
+    data: {},
+});

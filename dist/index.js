@@ -9,6 +9,8 @@ var getDomArray = require('zhf.get-dom-array');
 
 var Super = function () {
     function Super(opts) {
+        var _this = this;
+
         _classCallCheck(this, Super);
 
         this.opts = extend({
@@ -33,41 +35,36 @@ var Super = function () {
             },
             data: {}
         }, opts);
-        this.init();
+        getDomArray(this.opts.item).forEach(function (dom) {
+            _this.events(dom);
+        });
     }
 
     _createClass(Super, [{
-        key: 'init',
-        value: function init() {
-            var _this = this;
-
-            var opts = this.opts;
-            var config = opts.config;
-            var itemAll = getDomArray(opts.item);
-            itemAll.forEach(function (dom) {
-                if (getComputedStyle(dom).position === 'static') {
-                    dom.style.position = 'relative';
-                }
-                if (config.hasIconMove && getComputedStyle(dom).cursor !== 'move') {
-                    dom.style.cursor = 'move';
-                }
-                _this.events(dom);
-            });
-        }
-    }, {
         key: 'events',
-        value: function events(v) {
+        value: function events(dom) {
             var self = this;
+            var opts = self.opts;
+            var config = opts.config;
+            if (getComputedStyle(dom).position === 'static') {
+                dom.style.position = 'relative';
+            }
+            if (config.hasIconMove && getComputedStyle(dom).cursor !== 'move') {
+                dom.style.cursor = 'move';
+            }
 
             function mouseDown(ev) {
                 ev.preventDefault();
                 ev.stopPropagation();
                 var opts = self.opts;
-                self.item = this;
+                self.item = this; // 这个其实就是参数dom
+                // console.log(self.item === dom); // true
                 self.moveSpeedX = 0; // 鼠标移动时X轴的移动速度
                 self.moveSpeedY = 0; // 鼠标移动时Y轴的移动速度
-                self.moveDirectionX = 'no-move'; // 鼠标移动的时候，水平方向往哪个方形移动，相对于上次移动
-                self.moveDirectionY = 'no-move'; // 鼠标移动的时候，垂直方向往哪个方形移动，相对于上次移动
+                self.moveDirectionX = 'no-move'; // 鼠标移动的时候，水平方向往哪个方形移动，相对于鼠标上次移动的位置
+                self.moveDirectionY = 'no-move'; // 鼠标移动的时候，垂直方向往哪个方形移动，相对于鼠标上次移动的位置
+                self.overDirectionX = 'no-move'; // 鼠标移动的时候，水平方向往哪个方形移动，相对于鼠标按下时的位置
+                self.overDirectionY = 'no-move'; // 鼠标移动的时候，垂直方向往哪个方形移动，相对于鼠标按下时的位置
                 self.prevMoveClientX = ev.clientX; // 上次移动鼠标时X轴的可视距离
                 self.prevMoveClientY = ev.clientY; // 上次移动鼠标时Y轴的可视距离
                 self.mouseDownClientX = ev.clientX; // 鼠标按下时X轴的可视距离
@@ -76,7 +73,13 @@ var Super = function () {
                 callback.mouseDownBefore({
                     self: self,
                     ev: ev,
-                    dom: self.item
+                    dom: self.item,
+                    moveSpeedX: self.moveSpeedX,
+                    moveSpeedY: self.moveSpeedY,
+                    moveDirectionX: self.moveDirectionX,
+                    moveDirectionY: self.moveDirectionY,
+                    overDirectionX: self.overDirectionX,
+                    overDirectionY: self.overDirectionY
                 });
                 var oGetComputedStyle = getComputedStyle(this);
                 self.oGetComputedStyle = oGetComputedStyle;
@@ -87,7 +90,13 @@ var Super = function () {
                 callback.mouseDownAfter({
                     self: self,
                     ev: ev,
-                    dom: self.item
+                    dom: self.item,
+                    moveSpeedX: self.moveSpeedX,
+                    moveSpeedY: self.moveSpeedY,
+                    moveDirectionX: self.moveDirectionX,
+                    moveDirectionY: self.moveDirectionY,
+                    overDirectionX: self.overDirectionX,
+                    overDirectionY: self.overDirectionY
                 });
             }
 
@@ -99,7 +108,13 @@ var Super = function () {
                 callback.mouseMoveBefore({
                     self: self,
                     ev: ev,
-                    dom: self.item
+                    dom: self.item,
+                    moveSpeedX: self.moveSpeedX,
+                    moveSpeedY: self.moveSpeedY,
+                    moveDirectionX: self.moveDirectionX,
+                    moveDirectionY: self.moveDirectionY,
+                    overDirectionX: self.overDirectionX,
+                    overDirectionY: self.overDirectionY
                 });
                 var config = opts.config;
                 var direction = config.direction;
@@ -165,7 +180,7 @@ var Super = function () {
                 if (direction === 'row') {
                     self.item.style.left = left + 'px';
                 }
-                // 移动方向和移动速度
+                // 移动方向和移动速度 - 相对于鼠标上次移动时的位置
                 self.moveSpeedX = ev.clientX - self.prevMoveClientX;
                 self.moveSpeedY = ev.clientY - self.prevMoveClientY;
                 if (self.moveSpeedX > 0) {
@@ -180,11 +195,29 @@ var Super = function () {
                 }
                 self.prevMoveClientX = ev.clientX;
                 self.prevMoveClientY = ev.clientY;
-                // 移动方向
+                // 移动方向 - 相对于鼠标按下时的位置
+                var resultX = ev.clientX - self.mouseDownClientX;
+                var resultY = ev.clientY - self.mouseDownClientY;
+                if (resultX > 0) {
+                    self.overDirectionX = 'right';
+                } else if (resultX < 0) {
+                    self.overDirectionX = 'left';
+                }
+                if (resultY > 0) {
+                    self.overDirectionY = 'bottom';
+                } else if (resultY < 0) {
+                    self.overDirectionY = 'top';
+                }
                 callback.mouseMoveAfter({
                     self: self,
                     ev: ev,
-                    dom: self.item
+                    dom: self.item,
+                    moveSpeedX: self.moveSpeedX,
+                    moveSpeedY: self.moveSpeedY,
+                    moveDirectionX: self.moveDirectionX,
+                    moveDirectionY: self.moveDirectionY,
+                    overDirectionX: self.overDirectionX,
+                    overDirectionY: self.overDirectionY
                 });
             }
 
@@ -193,40 +226,33 @@ var Super = function () {
                 ev.stopPropagation();
                 var opts = self.opts;
                 var callback = opts.callback;
-                /*
-                let upDirectionX = self.moveDirectionX; // 鼠标抬起的时候，水平方向往哪个方形移动，相对于鼠标按下的时候
-                let upDirectionY = self.moveDirectionY; // 鼠标抬起的时候，垂直方向往哪个方形移动，相对于鼠标按下的时候
-                const resultX = ev.clientX - self.mouseDownClientX;
-                const resultY = ev.clientY - self.mouseDownClientY;
-                if (resultX > 0) {
-                    upDirectionX = 'right';
-                } else if (resultX < 0) {
-                    upDirectionX = 'left';
-                }
-                if (resultY > 0) {
-                    upDirectionY = 'bottom';
-                } else if (resultY < 0) {
-                    upDirectionY = 'top';
-                }
-                */
                 callback.mouseUpBefore({
                     self: self,
                     ev: ev,
-                    dom: self.item
+                    dom: self.item,
+                    moveSpeedX: self.moveSpeedX,
+                    moveSpeedY: self.moveSpeedY,
+                    moveDirectionX: self.moveDirectionX,
+                    moveDirectionY: self.moveDirectionY,
+                    overDirectionX: self.overDirectionX,
+                    overDirectionY: self.overDirectionY
                 });
                 document.removeEventListener('mousemove', mouseMove);
                 document.removeEventListener('mouseup', mouseUp);
                 callback.mouseUpAfter({
                     self: self,
                     ev: ev,
-                    dom: self.item
+                    dom: self.item,
+                    moveSpeedX: self.moveSpeedX,
+                    moveSpeedY: self.moveSpeedY,
+                    moveDirectionX: self.moveDirectionX,
+                    moveDirectionY: self.moveDirectionY,
+                    overDirectionX: self.overDirectionX,
+                    overDirectionY: self.overDirectionY
                 });
             }
 
-            v.removeEventListener('mousedown', mouseDown);
-            document.removeEventListener('mousemove', mouseMove);
-            document.removeEventListener('mouseup', mouseUp);
-            v.addEventListener('mousedown', mouseDown);
+            dom.addEventListener('mousedown', mouseDown);
         }
     }]);
 

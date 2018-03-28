@@ -51,8 +51,6 @@ class Super {
             ev.preventDefault();
             ev.stopPropagation();
             const opts = self.opts;
-            self.item = this; // 这个其实就是参数dom
-            // console.log(self.item === dom); // true
             self.moveSpeedX = 0; // 鼠标移动时X轴的移动速度
             self.moveSpeedY = 0; // 鼠标移动时Y轴的移动速度
             self.moveDirectionX = 'no-move'; // 鼠标移动的时候，水平方向往哪个方形移动，相对于鼠标上次移动的位置
@@ -67,7 +65,7 @@ class Super {
             callback.mouseDownBefore({
                 self: self,
                 ev: ev,
-                dom: self.item,
+                dom: dom,
                 moveSpeedX: self.moveSpeedX,
                 moveSpeedY: self.moveSpeedY,
                 moveDirectionX: self.moveDirectionX,
@@ -84,7 +82,7 @@ class Super {
             callback.mouseDownAfter({
                 self: self,
                 ev: ev,
-                dom: self.item,
+                dom: dom,
                 moveSpeedX: self.moveSpeedX,
                 moveSpeedY: self.moveSpeedY,
                 moveDirectionX: self.moveDirectionX,
@@ -102,7 +100,7 @@ class Super {
             callback.mouseMoveBefore({
                 self: self,
                 ev: ev,
-                dom: self.item,
+                dom: dom,
                 moveSpeedX: self.moveSpeedX,
                 moveSpeedY: self.moveSpeedY,
                 moveDirectionX: self.moveDirectionX,
@@ -160,17 +158,17 @@ class Super {
                 }
             }
             // 赋值
-            self.item.style.right = 'auto';
-            self.item.style.bottom = 'auto';
+            dom.style.right = 'auto';
+            dom.style.bottom = 'auto';
             if (direction === 'all') {
-                self.item.style.left = `${left}px`;
-                self.item.style.top = `${top}px`;
+                dom.style.left = `${left}px`;
+                dom.style.top = `${top}px`;
             }
             if (direction === 'col') {
-                self.item.style.top = `${top}px`;
+                dom.style.top = `${top}px`;
             }
             if (direction === 'row') {
-                self.item.style.left = `${left}px`;
+                dom.style.left = `${left}px`;
             }
             // 移动方向和移动速度 - 相对于鼠标上次移动时的位置
             self.moveSpeedX = ev.clientX - self.prevMoveClientX;
@@ -203,7 +201,7 @@ class Super {
             callback.mouseMoveAfter({
                 self: self,
                 ev: ev,
-                dom: self.item,
+                dom: dom,
                 moveSpeedX: self.moveSpeedX,
                 moveSpeedY: self.moveSpeedY,
                 moveDirectionX: self.moveDirectionX,
@@ -221,7 +219,7 @@ class Super {
             callback.mouseUpBefore({
                 self: self,
                 ev: ev,
-                dom: self.item,
+                dom: dom,
                 moveSpeedX: self.moveSpeedX,
                 moveSpeedY: self.moveSpeedY,
                 moveDirectionX: self.moveDirectionX,
@@ -234,7 +232,7 @@ class Super {
             callback.mouseUpAfter({
                 self: self,
                 ev: ev,
-                dom: self.item,
+                dom: dom,
                 moveSpeedX: self.moveSpeedX,
                 moveSpeedY: self.moveSpeedY,
                 moveDirectionX: self.moveDirectionX,

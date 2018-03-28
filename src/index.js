@@ -57,6 +57,14 @@ class Super {
             ev.stopPropagation();
             const opts = self.opts;
             self.item = this;
+            self.moveSpeedX = 0; // 鼠标移动时X轴的移动速度
+            self.moveSpeedY = 0; // 鼠标移动时Y轴的移动速度
+            self.moveDirectionX = 'no-move'; // 鼠标移动的时候，水平方向往哪个方形移动，相对于上次移动
+            self.moveDirectionY = 'no-move'; // 鼠标移动的时候，垂直方向往哪个方形移动，相对于上次移动
+            self.prevMoveClientX = ev.clientX; // 上次移动鼠标时X轴的可视距离
+            self.prevMoveClientY = ev.clientY; // 上次移动鼠标时Y轴的可视距离
+            self.mouseDownClientX = ev.clientX; // 鼠标按下时X轴的可视距离
+            self.mouseDownClientY = ev.clientY; // 鼠标按下时Y轴的可视距离
             const callback = opts.callback;
             callback.mouseDownBefore({
                 self: self,
@@ -73,8 +81,6 @@ class Super {
                 self: self,
                 ev: ev,
                 dom: self.item,
-                left: self.oGetComputedStyle.left,
-                top: self.oGetComputedStyle.top,
             });
         }
 
@@ -92,6 +98,7 @@ class Super {
             const direction = config.direction;
             let left = ev.clientX - self.disX;
             let top = ev.clientY - self.disY;
+            // 限制
             if (config.limitLeftMin !== null) { // 如果限制左边
                 if (config.isAdsorption) { // 如果具备吸附效果
                     if (left <= config.limitLeftMin + config.adsorptionDistance) {
@@ -136,6 +143,7 @@ class Super {
                     }
                 }
             }
+            // 赋值
             self.item.style.right = 'auto';
             self.item.style.bottom = 'auto';
             if (direction === 'all') {
@@ -148,12 +156,26 @@ class Super {
             if (direction === 'row') {
                 self.item.style.left = `${left}px`;
             }
+            // 移动方向和移动速度
+            self.moveSpeedX = ev.clientX - self.prevMoveClientX;
+            self.moveSpeedY = ev.clientY - self.prevMoveClientY;
+            if (self.moveSpeedX > 0) {
+                self.moveDirectionX = 'right';
+            } else if (self.moveSpeedX < 0) {
+                self.moveDirectionX = 'left';
+            }
+            if (self.moveSpeedY > 0) {
+                self.moveDirectionY = 'bottom';
+            } else if (self.moveSpeedY < 0) {
+                self.moveDirectionY = 'top';
+            }
+            self.prevMoveClientX = ev.clientX;
+            self.prevMoveClientY = ev.clientY;
+            // 移动方向
             callback.mouseMoveAfter({
                 self: self,
                 ev: ev,
                 dom: self.item,
-                left: self.oGetComputedStyle.left,
-                top: self.oGetComputedStyle.top,
             });
         }
 
@@ -162,6 +184,22 @@ class Super {
             ev.stopPropagation();
             const opts = self.opts;
             const callback = opts.callback;
+            /*
+            let upDirectionX = self.moveDirectionX; // 鼠标抬起的时候，水平方向往哪个方形移动，相对于鼠标按下的时候
+            let upDirectionY = self.moveDirectionY; // 鼠标抬起的时候，垂直方向往哪个方形移动，相对于鼠标按下的时候
+            const resultX = ev.clientX - self.mouseDownClientX;
+            const resultY = ev.clientY - self.mouseDownClientY;
+            if (resultX > 0) {
+                upDirectionX = 'right';
+            } else if (resultX < 0) {
+                upDirectionX = 'left';
+            }
+            if (resultY > 0) {
+                upDirectionY = 'bottom';
+            } else if (resultY < 0) {
+                upDirectionY = 'top';
+            }
+            */
             callback.mouseUpBefore({
                 self: self,
                 ev: ev,
@@ -173,11 +211,12 @@ class Super {
                 self: self,
                 ev: ev,
                 dom: self.item,
-                left: self.oGetComputedStyle.left,
-                top: self.oGetComputedStyle.top,
             });
         }
 
+        v.removeEventListener('mousedown', mouseDown);
+        document.removeEventListener('mousemove', mouseMove);
+        document.removeEventListener('mouseup', mouseUp);
         v.addEventListener('mousedown', mouseDown);
     }
 }

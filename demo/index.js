@@ -43,7 +43,26 @@ new Drag({
         },
         mouseMoveAfter(obj) {
             const dom = obj.dom;
-            console.log('top', dom.offsetTop, 'height', dom.offsetHeight);
+            const impact = [];
+            item1All.forEach(function (item) {
+                if (item !== dom && checkDomImpact(dom, item)) {
+                    impact.push(item);
+                }
+            });
+            impact.forEach(function (item) {
+                const domTop = dom.offsetTop;
+                const domHeight = dom.offsetHeight;
+                const domBottom = domTop + domHeight;
+                const itemTop = item.offsetTop;
+                const itemHeight = item.offsetHeight;
+                const itemBottom = itemTop + itemHeight;
+                if (domTop <= itemTop + itemHeight / 2 && domBottom > itemTop + itemHeight / 2) {
+                    // console.log('从下往上');
+                }
+                if (domTop < itemTop + itemHeight / 2 && domBottom >= itemTop + itemHeight / 2) {
+                    // console.log('从上往下');
+                }
+            });
             // 换位置待续...
         },
         mouseUpAfter(obj) {

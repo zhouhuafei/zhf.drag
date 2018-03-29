@@ -54,7 +54,7 @@ hint.innerHTML = `拖拽放到此处`;
 // wrap1拖拽
 const wrap1 = document.querySelector('.wrap1');
 const item1All = wrap1.querySelectorAll('.item');
-const drap = new Drag({
+const drag1 = new Drag({
     item: item1All,
     callback: {
         mouseDownBefore(obj) {
@@ -111,7 +111,7 @@ const itemTest = document.createElement('span');
 itemTest.className = 'item';
 itemTest.innerHTML = `item test`;
 wrap1.insertBefore(itemTest, item1All[0]);
-drap.events(itemTest);
+drag1.events(itemTest);
 
 // wrap2拖拽
 const wrap2 = document.querySelector('.wrap2');

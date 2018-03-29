@@ -88,8 +88,18 @@
                 z-index: 9999;
             }
 
-            .wrap2 .item.active {
+            .wrap2 .item.highlight {
                 background: rgba(255, 0, 0, 0.8);
+            }
+
+            .wrap2 .item.transition {
+                transition: 0.4s;
+            }
+
+            .wrap2 .item.active {
+                position: absolute;
+                opacity: 0.9;
+                z-index: 9999;
             }
 
             .drag-hint {

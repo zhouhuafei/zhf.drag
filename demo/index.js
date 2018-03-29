@@ -19,13 +19,29 @@ const zeroWrap = document.querySelector('.zero-wrap');
 const zero = zeroWrap.querySelector('.zero');
 new Drag({
     item: zero,
-    callback: {},
+    callback: {
+        mouseDownBefore: function (obj) {
+        },
+        mouseDownAfter: function (obj) {
+        },
+        mouseMoveBefore: function (obj) {
+        },
+        mouseMoveAfter: function (obj) {
+        },
+        mouseUpBefore: function (obj) {
+        },
+        mouseUpAfter: function (obj) {
+        },
+    },
     config: {
+        hasIconMove: true, // 默认
+        direction: 'all', // 默认，其他：'row'，'col'
         limitLeftMin: 0,
         limitLeftMax: zeroWrap.offsetWidth - zero.offsetWidth,
         limitTopMin: 0,
         limitTopMax: zeroWrap.offsetHeight - zero.offsetHeight,
         isAdsorption: true,
+        adsorptionDistance: 20, // 默认
     },
     data: {},
 });
@@ -105,10 +121,31 @@ new Drag({
     item: item2All,
     callback: {
         mouseDownBefore(obj) {
+            const dom = obj.dom;
+            dom.classList.add('highlight');
+            dom.cloneDom = dom.cloneNode(true);
+            dom.classList.add('active');
+            dom.style.left = `${dom.offsetLeft}px`;
+            dom.style.top = `${dom.offsetTop}px`;
+            hint.style.width = ``;
+            hint.style.height = ``;
+            wrap2.insertBefore(dom.cloneDom, dom);
         },
         mouseMoveAfter(obj) {
         },
         mouseUpAfter(obj) {
+            const dom = obj.dom;
+            dom.classList.add('transition');
+            dom.style.left = `${dom.cloneDom.offsetLeft}px`;
+            dom.style.top = `${dom.cloneDom.offsetTop}px`;
+            console.log(obj);
+            setTimeout(function () {
+                dom.classList.remove('highlight');
+                dom.classList.remove('active');
+                dom.classList.remove('transition');
+                dom.setAttribute('style', '');
+                wrap2.replaceChild(dom, dom.cloneDom);
+            }, 400);
         },
     },
     config: {},

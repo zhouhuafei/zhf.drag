@@ -35,7 +35,7 @@
         "gulp-rename": "^1.2.2",
         "gulp-uglify": "^3.0.0",
         "jest": "^22.2.1",
-        "zhf.check-dom-impact": "^1.0.2",
+        "zhf.check-dom-impact": "^1.0.3",
         "zhf.offset": "^1.0.4"
     },
     "dependencies": {

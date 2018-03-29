@@ -9,7 +9,7 @@ for (let i = 1; i <= 9; i++) {
     const g = Math.round(Math.random() * 255);
     const b = Math.round(Math.random() * 255);
     const a = Math.round(Math.random() * (10 - 1) + 1) / 10; // 0.1 - 0.9
-    const h = Math.round(Math.random() * (80 - 20) + 20);
+    const h = Math.round(Math.random() * (60 - 20) + 20);
     strStyle += `.wrap .item${i}{height:${h}px;background:rgba(${r},${g},${b},1);}`;
 }
 document.querySelector('style').innerHTML += strStyle;
@@ -72,7 +72,7 @@ const drag1 = new Drag({
             const moveDirectionY = obj.moveDirectionY;
             const impact = [];
             item1All.forEach(function (item) {
-                if (item !== dom && checkDomImpact(dom, item)) {
+                if (item !== dom && checkDomImpact(dom, item).isImpact) {
                     impact.push(item);
                 }
             });
@@ -128,7 +128,7 @@ new Drag({
         },
         mouseMoveAfter(obj) {
             const dom = obj.dom;
-            dom.isImpact = checkDomImpact(dom, wrap1); // 是否碰撞了
+            dom.isImpact = checkDomImpact(dom, wrap1).isImpact; // 是否碰撞了
             const moveDirectionY = obj.moveDirectionY;
             const domLeft = offset(dom).left;
             const domTop = offset(dom).top;
@@ -165,6 +165,11 @@ new Drag({
                     wrap1.removeChild(hint);
                     dom.hasHint = false;
                 }
+                return;
+            }
+            if (dom.isImpact && !minDistanceDom) { // 碰撞了，但是最近的却不存在，说明父级容器是空的
+                wrap1.appendChild(hint);
+                dom.hasHint = true;
                 return;
             }
             const minDistanceDomTop = offset(minDistanceDom).top;

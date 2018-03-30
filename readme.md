@@ -2,6 +2,7 @@
 * commonjs规范
 ```
 const Drag = require('zhf.drag');
+
 const zeroWrap = document.querySelector('.zero-wrap');
 const zero = zeroWrap.querySelector('.zero');
 new Drag({

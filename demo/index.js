@@ -119,7 +119,6 @@ new Drag({
             }
             dom.classList.add('highlight');
             dom.cloneDom = dom.cloneNode(true);
-            dom.hasHint = false; // 是否存在提示
             dom.isImpact = false; // 是否碰撞了
             dom.classList.add('active');
             dom.style.left = `${dom.offsetLeft}px`;
@@ -139,7 +138,8 @@ new Drag({
             const domCenterY = domTop + domHeight / 2;
             let minDistanceDom = null;
             let minDistance = null;
-            if (dom.isImpact) { // 如果碰撞了，找到和dom碰的最近的那个item
+            if (dom.isImpact) { // 如果碰撞了
+                // 找到和dom碰的最近的那个item
                 item1All.forEach(function (item) {
                     const itemLeft = offset(item).left;
                     const itemTop = offset(item).top;
@@ -160,30 +160,26 @@ new Drag({
                         }
                     }
                 });
-            } else { // 如果没碰撞，则移除掉提示，并不继续往下走了
-                if (dom.hasHint) {
+                if (!minDistanceDom) { // 如果最近的不存在，说明父级容器是空的，则直接填充hint
+                    wrap1.appendChild(hint);
+                } else { // 如果最近的存在，则填充到对应的位置
+                    const minDistanceDomTop = offset(minDistanceDom).top;
+                    const minDistanceDomHeight = minDistanceDom.offsetHeight;
+                    if (moveDirectionY === 'top') { // 向上碰撞了
+                        if (domTop <= minDistanceDomTop + minDistanceDomHeight / 2) {
+                            wrap1.insertBefore(hint, minDistanceDom);
+                        }
+                    }
+                    if (moveDirectionY === 'bottom') { // 向下碰撞了
+                        if (domBottom >= minDistanceDomTop + minDistanceDomHeight / 2) {
+                            wrap1.insertBefore(hint, minDistanceDom.nextElementSibling); // minDistanceDom.nextElementSibling如果是null相当于执行了appendChild
+                        }
+                    }
+                }
+            } else { // 如果没碰撞
+                // 提示如果存在，则移除掉提示
+                if (hint.parentNode !== null) {
                     wrap1.removeChild(hint);
-                    dom.hasHint = false;
-                }
-                return;
-            }
-            if (dom.isImpact && !minDistanceDom) { // 碰撞了，但是最近的却不存在，说明父级容器是空的
-                wrap1.appendChild(hint);
-                dom.hasHint = true;
-                return;
-            }
-            const minDistanceDomTop = offset(minDistanceDom).top;
-            const minDistanceDomHeight = minDistanceDom.offsetHeight;
-            if (moveDirectionY === 'top') { // 向上碰撞了
-                if (domTop <= minDistanceDomTop + minDistanceDomHeight / 2) {
-                    wrap1.insertBefore(hint, minDistanceDom);
-                    dom.hasHint = true;
-                }
-            }
-            if (moveDirectionY === 'bottom') { // 向下碰撞了
-                if (domBottom >= minDistanceDomTop + minDistanceDomHeight / 2) {
-                    wrap1.insertBefore(hint, minDistanceDom.nextElementSibling); // minDistanceDom.nextElementSibling如果是null相当于执行了appendChild
-                    dom.hasHint = true;
                 }
             }
         },

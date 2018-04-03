@@ -14,11 +14,11 @@ for (let i = 1; i <= 9; i++) {
 }
 document.querySelector('style').innerHTML += strStyle;
 
-// zero
-const zeroWrap = document.querySelector('.zero-wrap');
-const zero = zeroWrap.querySelector('.zero');
+// zero1
+const zeroWrap1 = document.querySelector('.zero-wrap1');
+const zero1 = zeroWrap1.querySelector('.zero');
 new Drag({
-    item: zero,
+    item: zero1,
     callback: {
         mouseDownBefore: function (obj) {
         },
@@ -37,13 +37,21 @@ new Drag({
         hasIconMove: true, // 默认
         direction: 'all', // 默认，其他：'row'，'col'
         limitLeftMin: 0,
-        limitLeftMax: zeroWrap.offsetWidth - zero.offsetWidth,
+        limitLeftMax: zeroWrap1.offsetWidth - zero1.offsetWidth,
         limitTopMin: 0,
-        limitTopMax: zeroWrap.offsetHeight - zero.offsetHeight,
+        limitTopMax: zeroWrap1.offsetHeight - zero1.offsetHeight,
         isAdsorption: true,
         adsorptionDistance: 20, // 默认
     },
     data: {},
+});
+
+// zero2
+const zeroWrap2 = document.querySelector('.zero-wrap2');
+const zero2 = zeroWrap2.querySelector('.zero');
+new Drag({
+    item: zero2,
+    controlledWrap: zeroWrap2, // 拖拽item让controlledWrap移动
 });
 
 // hint

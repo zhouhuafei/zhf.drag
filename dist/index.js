@@ -15,6 +15,7 @@ var Super = function () {
 
         this.opts = extend({
             item: '', // 这个容器里的直属子级可以被拖拽
+            controlledWrap: null, // 拖拽item让controlledWrap移动
             callback: {
                 mouseDownBefore: function mouseDownBefore(obj) {},
                 mouseDownAfter: function mouseDownAfter(obj) {},
@@ -46,11 +47,38 @@ var Super = function () {
             var self = this;
             var opts = self.opts;
             var config = opts.config;
+            // 添加遮罩，防止点的是链接，跳转了。
+            var mask = document.createElement('span');
+            mask.setAttribute('style', 'position: absolute;width: 100%;height: 100%;z-index: 9999;left: 0;top: 0;');
+            dom.appendChild(mask);
+            // 添加定位
             if (getComputedStyle(dom).position === 'static') {
                 dom.style.position = 'relative';
             }
             if (config.hasIconMove && getComputedStyle(dom).cursor !== 'move') {
                 dom.style.cursor = 'move';
+            }
+            var controlledWrapDom = getDomArray(opts.controlledWrap)[0];
+            if (controlledWrapDom && getComputedStyle(controlledWrapDom).position === 'static') {
+                controlledWrapDom.style.position = 'relative';
+            }
+            self.dom = dom; // 把dom提供给外部
+            self.controlledWrapDom = controlledWrapDom; // 把controlledWrapDom提供给外部
+
+            function addStyle() {
+                if (controlledWrapDom) {
+                    controlledWrapDom.style.zIndex = '9999';
+                } else {
+                    dom.style.zIndex = '9999';
+                }
+            }
+
+            function removeStyle() {
+                if (controlledWrapDom) {
+                    controlledWrapDom.style.zIndex = '';
+                } else {
+                    dom.style.zIndex = '';
+                }
             }
 
             function mouseDown(ev) {
@@ -74,6 +102,7 @@ var Super = function () {
                     self: self,
                     ev: ev,
                     dom: dom,
+                    controlledWrapDom: controlledWrapDom,
                     moveDistanceX: self.moveDistanceX,
                     moveDistanceY: self.moveDistanceY,
                     moveDirectionX: self.moveDirectionX,
@@ -83,7 +112,11 @@ var Super = function () {
                     overDirectionX: self.overDirectionX,
                     overDirectionY: self.overDirectionY
                 });
-                var oGetComputedStyle = getComputedStyle(this);
+                addStyle();
+                var oGetComputedStyle = getComputedStyle(dom);
+                if (controlledWrapDom) {
+                    oGetComputedStyle = getComputedStyle(controlledWrapDom);
+                }
                 self.oGetComputedStyle = oGetComputedStyle;
                 self.disX = ev.clientX - oGetComputedStyle.left.replace('px', '');
                 self.disY = ev.clientY - oGetComputedStyle.top.replace('px', '');
@@ -93,6 +126,7 @@ var Super = function () {
                     self: self,
                     ev: ev,
                     dom: dom,
+                    controlledWrapDom: controlledWrapDom,
                     moveDistanceX: self.moveDistanceX,
                     moveDistanceY: self.moveDistanceY,
                     moveDirectionX: self.moveDirectionX,
@@ -113,6 +147,7 @@ var Super = function () {
                     self: self,
                     ev: ev,
                     dom: dom,
+                    controlledWrapDom: controlledWrapDom,
                     moveDistanceX: self.moveDistanceX,
                     moveDistanceY: self.moveDistanceY,
                     moveDirectionX: self.moveDirectionX,
@@ -174,17 +209,21 @@ var Super = function () {
                     }
                 }
                 // 赋值
-                dom.style.right = 'auto';
-                dom.style.bottom = 'auto';
+                var moveDom = dom;
+                if (controlledWrapDom) {
+                    moveDom = controlledWrapDom;
+                }
+                moveDom.style.right = 'auto';
+                moveDom.style.bottom = 'auto';
                 if (direction === 'all') {
-                    dom.style.left = left + 'px';
-                    dom.style.top = top + 'px';
+                    moveDom.style.left = left + 'px';
+                    moveDom.style.top = top + 'px';
                 }
                 if (direction === 'col') {
-                    dom.style.top = top + 'px';
+                    moveDom.style.top = top + 'px';
                 }
                 if (direction === 'row') {
-                    dom.style.left = left + 'px';
+                    moveDom.style.left = left + 'px';
                 }
                 // 移动方向和移动距离(移动速度) - 相对于鼠标上次移动时的位置
                 self.moveDistanceX = ev.clientX - self.prevMoveClientX;
@@ -218,6 +257,7 @@ var Super = function () {
                     self: self,
                     ev: ev,
                     dom: dom,
+                    controlledWrapDom: controlledWrapDom,
                     moveDistanceX: self.moveDistanceX,
                     moveDistanceY: self.moveDistanceY,
                     moveDirectionX: self.moveDirectionX,
@@ -238,6 +278,7 @@ var Super = function () {
                     self: self,
                     ev: ev,
                     dom: dom,
+                    controlledWrapDom: controlledWrapDom,
                     moveDistanceX: self.moveDistanceX,
                     moveDistanceY: self.moveDistanceY,
                     moveDirectionX: self.moveDirectionX,
@@ -247,12 +288,14 @@ var Super = function () {
                     overDirectionX: self.overDirectionX,
                     overDirectionY: self.overDirectionY
                 });
+                removeStyle();
                 document.removeEventListener('mousemove', mouseMove);
                 document.removeEventListener('mouseup', mouseUp);
                 callback.mouseUpAfter({
                     self: self,
                     ev: ev,
                     dom: dom,
+                    controlledWrapDom: controlledWrapDom,
                     moveDistanceX: self.moveDistanceX,
                     moveDistanceY: self.moveDistanceY,
                     moveDirectionX: self.moveDirectionX,

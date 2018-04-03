@@ -65,22 +65,6 @@ var Super = function () {
             self.dom = dom; // 把dom提供给外部
             self.controlledWrapDom = controlledWrapDom; // 把controlledWrapDom提供给外部
 
-            function addStyle() {
-                if (controlledWrapDom) {
-                    controlledWrapDom.style.zIndex = '9999';
-                } else {
-                    dom.style.zIndex = '9999';
-                }
-            }
-
-            function removeStyle() {
-                if (controlledWrapDom) {
-                    controlledWrapDom.style.zIndex = '';
-                } else {
-                    dom.style.zIndex = '';
-                }
-            }
-
             function mouseDown(ev) {
                 ev.preventDefault();
                 ev.stopPropagation();
@@ -112,7 +96,6 @@ var Super = function () {
                     overDirectionX: self.overDirectionX,
                     overDirectionY: self.overDirectionY
                 });
-                addStyle();
                 var oGetComputedStyle = getComputedStyle(dom);
                 if (controlledWrapDom) {
                     oGetComputedStyle = getComputedStyle(controlledWrapDom);
@@ -288,7 +271,6 @@ var Super = function () {
                     overDirectionX: self.overDirectionX,
                     overDirectionY: self.overDirectionY
                 });
-                removeStyle();
                 document.removeEventListener('mousemove', mouseMove);
                 document.removeEventListener('mouseup', mouseUp);
                 callback.mouseUpAfter({
